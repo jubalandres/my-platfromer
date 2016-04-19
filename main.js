@@ -29,30 +29,163 @@ function getDeltaTime()
 
 //-------------------- Don't modify anything above here
 
+
+
+ 
+var cells = [];
+function initialize() {
+	for(var layerIdx = 0; layerIdx < LAYER_COUNT; layerIdx++) {
+		cells[layerIdx] = [];
+		var idx = 0;
+		for(var y = 0; y < level1.layers[layerIdx].height; y++) {
+			cells[layerIdx][y] = [];
+			for(var x = 0; x < level1.layers[layerIdx].width; x++) {
+				if(level1.layers[layerIdx].data[idx] != 0) {
+					cells[layerIdx][y][x] = 1;
+					cells[layerIdx][y-1][x] = 1;
+					cells[layerIdx][y-1][x+1] = 1;
+					cells[layerIdx][y][x+1] =1;
+				}
+				else if(cells[layerIdx][y][x] != 1) {
+					cells[layerIdx][y][x] = 0;
+				}
+				idx++;
+			}
+		}
+	}
+}
+
+
+var fps = 0;
+var fpsCount = 0;
+var fpsTime = 0;
+var LAYER_COUNT =3;
+	//The number of layers in your map. In the sample from this week’s lesson we’re using a background layer, a layer for the platforms, and a layer for the ladders. (We’ll add more layers in a later lesson)
+var MAP = {tw: 60, th: 15};
+	//Specifies how big your level is, in tiles. The sample level from the lesson is 60 tiles wide by 15 tiles high.
+var TILE = 35;
+	//The width/height of a tile (in pixels). Your tiles should be square. These dimensions refer to the map grid tiles. Our tileset tiles (the images) can be different dimensions.
+var TILESET_TILE = TILE * 2;
+	//The width/height of a tile in the tileset. Because the images are twice as big as the grid in our map we need to be careful (but it allows us a bit more flexibility when designing the level)
+var TILESET_PADDING = 2;
+	//How many pixels are between the image border and the tile images in the tilemap
+var TILESET_SPACING = 2;
+	//how many pixels are between tile images in the tilemap
+var TILESET_COUNT_X = 14;
+	//How many columns of tile images are in the tileset 
+var TILESET_COUNT_Y = 14;
+	//How many rows of tile images are in the tileset 
+var METER = TILE;
+var GRAVITY = METER * 9.8 * 6;
+var MAXDX = METER * 10;
+var MAXDY = METER * 15;
+var ACCEL = MAXDX * 2;
+var FRICTION = MAXDX * 6;
+var JUMP = METER * 1500;
+var LAYER_COUNT = 3;
+var LAYER_BACKGROUND = 0;
+var LAYER_PLATFORMS = 1;
+var LAYER_LADDERS = 2;
+function cellAtPixelCoord(layer, x,y)
+{
+	if(x<0 || x>SCREEN_WIDTH)
+		return 1;
+	if(y>SCREEN_HEIGHT)
+		return 0;
+	return cellAtTileCoord(layer, p2t(x), p2t(y));
+};
+
+function cellAtTileCoord(layer, tx, ty)
+{
+	if(tx<0 || tx>=MAP.tw)
+		return 1;
+	if(ty>=MAP.th)
+		return 0;
+	return cells[layer][ty][tx];
+};
+
+function tileToPixel(tile)
+{
+	return tile * TILE;
+};
+
+function pixelToTile(pixel)
+{
+	return Math.floor(pixel/TILE);
+};
+function bound(value, min, max)
+{
+	if(value < min)
+		return min;
+	if(value > max)
+		return max;
+	return value;
+}
+
+
+var tileset = document.createElement("img");
+tileset.src = "tileset.png";
+function drawMap()
+{
+	for(var layeridx=0;layeridx<LAYER_COUNT;layeridx++)
+	{
+		var idx=0;
+		for( var y = 0;y < level1.layers[layeridx].height; y++)
+		{
+			for( var x = 0;x < level1.layers[layeridx].width; x++)
+			{
+				if(level1.layers[layeridx].data[idx] != 0)
+				{
+					var tileindex = level1.layers[layeridx].data[idx] - 1;
+					var sx = TILESET_PADDING + (tileindex % TILESET_COUNT_X)*(TILESET_TILE + TILESET_SPACING);
+					var sy = TILESET_PADDING + (Math.floor(tileindex/TILESET_COUNT_Y))*(TILESET_TILE + TILESET_SPACING);
+					context.drawImage(tileset,sx,sy, TILESET_TILE,TILESET_TILE,x*TILE,(y-1)*TILE, TILESET_TILE,TILESET_TILE);
+				}
+				idx++;
+			}
+		} 
+	}
+}
 var SCREEN_WIDTH = canvas.width;
 var SCREEN_HEIGHT = canvas.height;
 var player = new Player();
 var keyboard = new Keyboard();
-
-
-// some variables to calculate the Frames Per Second (FPS - this tells use
-// how fast our game is running, and allows us to make the game run at a 
-// constant speed)
-var fps = 0;
-var fpsCount = 0;
-var fpsTime = 0;
-
-// load an image to draw
-var chuckNorris = document.createElement("img");
-chuckNorris.src = "hero.png";
+var enemy = new Enemy();
+var bullets = [];
+function playerShoot()
+{
+	var bullet = new Bullet()
+	bullets.push(bullet);
+}
 
 function run()
 {
-context.fillStyle = "#ccc";
+context.fillStyle = "gray";
 context.fillRect(0, 0, canvas.width, canvas.height);
 var deltaTime = getDeltaTime();
+if (keyboard.isKeyDown(keyboard.KEY_SPACE))
+{
+	playerShoot();
+}
+drawMap();
+for(var i=0; i<bullets.length; i++)
+{
+	bullets[i].update(deltaTime);
+	bullets[i].draw();
+}
+
+for(var j=0; j<bullets.length; j++)
+{
+if(intersects(
+bullets[j].x, bullets[j].y,
+bullets[j].width, bullets[j].height,
+enemy.x, enemy.y,
+enemy.width, enemy.height) == true)
+{enemy.isdead = true}
+}
 player.update(deltaTime);
 player.draw();
+enemy.draw();
 // update the frame counter
 fpsTime += deltaTime;
 fpsCount++;
@@ -68,10 +201,8 @@ context.font="14px Arial";
 context.fillText("FPS: " + fps, 5, 20, 100);
 }
 
-
+initialize();
 //-------------------- Don't modify anything below here
-
-
 // This code will set up the framework so that the 'run' function is called 60 times per second.
 // We have a some options to fall back on in case the browser doesn't support our preferred method.
 (function() {
