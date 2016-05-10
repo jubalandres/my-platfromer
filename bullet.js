@@ -1,11 +1,11 @@
 var Bullet = function () {
 	this.image = document.createElement("img");
-	this.x = player.position.x + 50;
-	this.y = player.position.y + 40;
+	this.x = player.position.x + 90;
+	this.y = player.position.y + 15;
 	this.width = 5;
 	this.height = 5;
 	this.velocity = new Vector2(1,0);
-	this.velocity.multiplyScalar(150.5);
+	this.velocity.multiplyScalar(800.5);
 	this.rotation = player.rotation;
 	this.image.src = "bullet.png";
 };
