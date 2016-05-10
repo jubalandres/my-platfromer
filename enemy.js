@@ -1,4 +1,17 @@
+<<<<<<< HEAD
 var Enemy = function(x ,y)
+=======
+var Enemy = function() {
+	this.image = document.createElement("img");
+	this.x = canvas.width/2;
+	this.y = canvas.height/2;
+	this.width = -299;
+	this.height = -790;
+	this.image.src = "enemy.png";
+	this.isdead = false;
+};
+Enemy.prototype.draw = function()
+>>>>>>> origin/master
 {
 	this.sprite = new Sprite("bat.png");
 	this.sprite.buildAnimation(2, 1, 88, 94, 0.3, [0,1]);
