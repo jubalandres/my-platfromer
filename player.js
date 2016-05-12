@@ -1,37 +1,104 @@
+var LEFT = 0;
+var RIGHT = 1;
+var ANIM_IDLE_LEFT = 0;
+var ANIM_JUMP_LEFT = 1;
+var ANIM_WALK_LEFT = 2;
+var ANIM_IDLE_RIGHT = 3;
+var ANIM_JUMP_RIGHT = 4;
+var ANIM_WALK_RIGHT = 5;
+var ANIM_MAX = 6;
+
 var Player = function() {
 	this.image = document.createElement("img");
-	this.position = new Vector2();
-	this.position.set( 9*TILE, 0*TILE );
+	this.sprite = new Sprite("hero1.png");
+	this.sprite.buildAnimation(16, 3, 76, 88, 0.05,
+			[41]);
+	this.sprite.buildAnimation(16, 3, 76, 88, 0.05,
+			[43]);
+	this.sprite.buildAnimation(16, 3, 76, 88, 0.05,
+			[24,25,26,27,28,29,30,31]);
+	this.sprite.buildAnimation(16, 3, 76, 88, 0.05,
+			[36]);
+	this.sprite.buildAnimation(16, 3, 76, 88, 0.05,
+			[42]);
+	this.sprite.buildAnimation(16, 3, 76, 88, 0.05,
+			[8,9,10,11,12,13,14,15]);
 	
-	this.width = 159;
-	this.height = 163;
+	for(var i=0; i<ANIM_MAX; i++)
+	{
+		this.sprite.setAnimationOffset(i, -25, -40);
+	}
+	this.position = new Vector2();
+	this.position.set( 1*TILE, 2*TILE );
+	
+	this.width = 76;
+	this.height = 88;
 	
 	this.offset = new Vector2();
-	this.offset.set(-55,-87);
+	this.offset.set(0,-35);
 	
 	this.velocity = new Vector2();
 	
 	this.falling = true;
 	this.jumping = false;
+	this.isdead = false
 	
-	this.image.src = "hero.png";
+	this.cooldownTimer=0;
+	
 	SetupImageEvents(this, this.image);
 };
 Player.prototype.update = function(deltaTime)
 {
+	this.sprite.update(deltaTime);
+	
 	var left = false;
 	var right = false;
 	var jump = false;
 	
 	if(keyboard.isKeyDown(keyboard.KEY_LEFT) == true){
 		left = true;
+		this.direction = LEFT;
+		if(this.sprite.currentAnimation != ANIM_WALK_LEFT &&
+			this.jumping == false)
+			this.sprite.setAnimation(ANIM_WALK_LEFT);
 	}
+	else
 	if(keyboard.isKeyDown(keyboard.KEY_RIGHT) == true){
 		right = true;
+		this.direction = RIGHT;
+		if(this.sprite.currentAnimation != ANIM_WALK_RIGHT &&
+			this.jumping == false)
+			this.sprite.setAnimation(ANIM_WALK_RIGHT);
 	}
-	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true) {
-		jump = true;
+	else{
+		if(this.jumping == false && this.falling == false)
+		{
+			if(this.direction == LEFT)
+			{
+				if(this.sprite.currentAnimation != ANIM_IDLE_LEFT)
+					this.sprite.setAnimation(ANIM_IDLE_LEFT);
+			}
+			else
+			{
+				if(this.sprite.currentAnimation != ANIM_IDLE_RIGHT)
+					this.sprite.setAnimation(ANIM_IDLE_RIGHT);
+			}
+		}
 	}
+		if(keyboard.isKeyDown(keyboard.KEY_UP) == true) {
+			jump = true;
+		}
+			if(this.cooldownTimer>0);
+			{
+				this.cooldownTimer-=deltaTime;
+			}
+		if(keyboard.isKeyDown(keyboard.KEY_SPACE)== true && this.cooldownTimer<=0){
+			sfxFire.play();
+			this.cooldownTimer=0.3;
+		}
+	
+	
+	
 	
 	var wasleft = this.velocity.x < 0;
 	var wasright = this.velocity.x > 0;
@@ -48,8 +115,18 @@ Player.prototype.update = function(deltaTime)
 		ddx = ddx - FRICTION; // player was going right, but not any more
 	if (jump && !this.jumping && !falling)
 	{
-		ddy = ddy - JUMP; // apply an instantaneous (large) vertical impulse
-		this.jumping = true;
+		   ddy = ddy - JUMP;
+		   this.jumping = true;
+		   if(this.direction == LEFT &&
+			    this.sprite.currentAnimation != ANIM_JUMP_LEFT)
+				{
+					this.sprite.setAnimation (ANIM_JUMP_LEFT);
+				}
+		   else if(this.direction == RIGHT &&
+			    this.sprite.currentAnimation != ANIM_JUMP_RIGHT)
+				{
+					this.sprite.setAnimation(ANIM_JUMP_RIGHT);	
+				}
 	}
 	this.position.y = Math.floor(this.position.y + (deltaTime * this.velocity.y));
 	this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
@@ -61,19 +138,25 @@ Player.prototype.update = function(deltaTime)
 		{
 			this.velocity.x = 0;
 		}
+	var position = new Vector2(this.position.x ,this.position.y);
+	position.add(this.offset);
+	var tx = pixelToTile(position.x);
+	var ty = pixelToTile(position.y);
+	var nx = (position.x)%TILE;
+	var ny = (position.y)%TILE;
 	
-	var tx = pixelToTile(this.position.x);
-	var ty = pixelToTile(this.position.y);
-	var nx = (this.position.x)%TILE;
-	var ny = (this.position.y)%TILE;
+	if(cellAtTileCoord(LAYER_LAVA, tx,ty -1))
+	{
+		this.isdead = true
+	}
+	
 	var cell = cellAtTileCoord(LAYER_PLATFORMS, tx, ty);
 	var cellright = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty);
 	var celldown = cellAtTileCoord(LAYER_PLATFORMS, tx, ty + 1);
-	var celldiag = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty + 1);
 	
 	if (this.velocity.y > 0) {
-		if ((celldown && !cell) || (celldiag && !cellright && nx)) {
-			this.position.y = tileToPixel(ty); // clamp the y position to avoid falling into platform below
+		if (celldown && !cell) {
+			this.position.y = tileToPixel(ty)-this.offset.y; // clamp the y position to avoid falling into platform below
 			this.velocity.y = 0; // stop downward velocity
 			this.falling = false; // no longer falling
 			this.jumping = false; // (or jumping)
@@ -82,23 +165,22 @@ Player.prototype.update = function(deltaTime)
 }
 	
 	else if (this.velocity.y < 0) {
-	if ((cell && !celldown) || (cellright && !celldiag && nx)) {
-		this.position.y = tileToPixel(ty + 1); // clamp the y position to avoid jumping into platform above
+	if (cell && !celldown) {
+		this.position.y = tileToPixel(ty + 1)-this.offset.y; // clamp the y position to avoid jumping into platform above
 		this.velocity.y = 0; // stop upward velocity
-		cell = celldown; // player is no longer really in that cell, we clamped them to the cell below
-		cellright = celldiag; // (ditto)
+		cell = celldown; // player is no longer really in that cell, we clamped them to the cell below// (ditto)
 		ny = 0; // player no longer overlaps the cells below
 	}
 	}
 	if (this.velocity.x > 0) {
-	if ((cellright && !cell) || (celldiag && !celldown && ny)) {
-		this.position.x = tileToPixel(tx); // clamp the x position to avoid moving into the platform we just hit
+	if (cellright && !cell) {
+		this.position.x = tileToPixel(tx)-this.offset.x; // clamp the x position to avoid moving into the platform we just hit
 		this.velocity.x = 0; // stop horizontal velocity
 	}
 }
 else if (this.velocity.x < 0) {
-	if ((cell && !cellright) || (celldown && !celldiag && ny)) {
-		this.position.x = tileToPixel(tx + 1); // clamp the x position to avoid moving into the platform we just hit
+	if (cell && !cellright) {
+		this.position.x = tileToPixel(tx + 1)-this.offset.x; // clamp the x position to avoid moving into the platform we just hit
 		this.velocity.x = 0; // stop horizontal velocity
 		}
 	}
@@ -106,9 +188,5 @@ else if (this.velocity.x < 0) {
 
 Player.prototype.draw = function()
 {
-	context.save();
-	context.translate(this.position.x, this.position.y);
-	context.rotate(this.rotation);
-	context.drawImage(this.image, -this.width/2, -this.height/2);
-	context.restore();
+	this.sprite.draw(context, this.position.x, this.position.y);
 }
