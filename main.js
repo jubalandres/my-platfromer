@@ -50,7 +50,10 @@ function initialize() {
 		}
 	} 
 		idx = 0;
-			for(var y = 0; y < TileMaps["draft"].layers[LAYER_OBJECT_ENEMIES].height; y++) {
+			 
+	}
+	var idx = 0;
+	for(var y = 0; y < TileMaps["draft"].layers[LAYER_OBJECT_ENEMIES].height; y++) {
 			for(var x = 0; x < TileMaps["draft"].layers[LAYER_OBJECT_ENEMIES].width; x++) {
 				if(TileMaps["draft"].layers[LAYER_OBJECT_ENEMIES].data[idx] != 0) {
 					var px = tileToPixel(x);
@@ -60,9 +63,7 @@ function initialize() {
 				}
 			idx++;
 			}
-		} 
-	}
-	
+		}
 	musicBackground = new Howl(
 	{
 		urls: ["cavelevelmusic.wav"],
@@ -122,8 +123,13 @@ var LAYER_LADDERS = 1;
 var LAYER_LAVA = 0;
 var LAYER_OBJECT_ENEMIES = 7;
 var LAYER_OBJECT_TRIGGERS = 6;
+var bullets = [];
+ function playerShoot()
+{
+var bullet = new Bullet(player.position.x +10 ,player.position.y -15,player.direction == RIGHT)
 
-
+bullets.push(bullet);
+}
 
 function cellAtPixelCoord(layer, x,y)
 {
@@ -190,18 +196,7 @@ var SCREEN_HEIGHT = canvas.height;
 var player = new Player();
 var healthbar = new Healthbar();
 var keyboard = new Keyboard();
-var bullets = [];
-function playerShoot()
-{
-	var bullet = new Bullet()
-	bullets.push(bullet);
-}
-var shootgunbullets = [];
-function playerShootshootgun()
-{
-	var shootgunbullet = new Shootgunbullets()
-	shootgunbullets.push(shootgunbullet);
-}
+
 var cavelevel = document.createElement("img");
 cavelevel.src = "cavelevels.png";
 var background = document.createElement("img");
@@ -221,11 +216,6 @@ function runSplash(deltaTime)
 var viewoffset = new Vector2();
 function runGame(deltaTime)
 {
-	if (keyboard.isKeyDown(keyboard.KEY_SPACE))
-	{
-		playerShoot();
-	}
-	
 	context.drawImage(cavelevel,0,0 );
 	
 	context.save();
@@ -240,17 +230,40 @@ function runGame(deltaTime)
 	}
 	player.update(deltaTime);
 	player.draw();
-	for(var i=0; i<bullets.length; i++)
-	{
-		bullets[i].update(deltaTime);
-		bullets[i].draw();
-	}
 	for(var i=0; i<enemies.length; i++)
 	{
 		enemies[i].update(deltaTime);	
 		enemies[i].draw();
 	}
-
+		var hit=false;
+		for(var i=0; i<bullets.length; i++)
+	{
+		bullets[i].update(deltaTime);
+		for(var j=0; j<enemies.length; j++)
+		{
+			if(intersects( bullets[i].position.x, bullets[i].position.y, TILE, TILE,
+				enemies[j].position.x, enemies[j].position.y, TILE, TILE) == true)
+		{
+// kill both the bullet and the enemy
+			enemies.splice(j, 1);
+			hit = true;
+// increment the player score
+			score += 1;
+			break;
+		}
+	}
+	if(hit == true)
+	{
+		bullets.splice(i, 1);
+		break;
+	}
+	
+}
+	for(var i=0; i<bullets.length; i++)
+	{
+		bullets [i].draw();
+	}
+	
 	context.restore();
 	
 	if (player.isdead == true)

@@ -30,6 +30,8 @@ var Player = function() {
 	}
 	this.position = new Vector2();
 	this.position.set( 1*TILE, 2*TILE );
+	 
+	this.direction = LEFT;
 	
 	this.width = 76;
 	this.height = 88;
@@ -95,6 +97,7 @@ Player.prototype.update = function(deltaTime)
 		if(keyboard.isKeyDown(keyboard.KEY_SPACE)== true && this.cooldownTimer<=0){
 			sfxFire.play();
 			this.cooldownTimer=0.3;
+			playerShoot();
 		}
 	
 	
