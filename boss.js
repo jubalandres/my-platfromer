@@ -1,7 +1,7 @@
-var Enemy = function(x ,y)
+var Boss = function(x ,y)
 {
 	this.image = document.createElement("img");
-	this.sprite = new Sprite("enemyice.png");
+	this.sprite = new Sprite("herowithsheild.png");
 	this.sprite.buildAnimation(16, 3, 76, 88, 0.05,
 			[16,17,18,19,20,21,22,23]);
 	this.sprite.setAnimationOffset(0, -25, -40);
@@ -22,7 +22,7 @@ var Enemy = function(x ,y)
 	SetupImageEvents(this, this.image);
 }
 	
-Enemy.prototype.update = function(dt)
+Boss.prototype.update = function(dt)
 {
 	this.sprite.update(dt);
 	if(this.pause > 0)
@@ -44,7 +44,7 @@ Enemy.prototype.update = function(dt)
 	if(this.moveRight)
 		{
 			if(celldiag && !cellright) {
-			ddx = ddx + ENEMY_ACCEL; // enemy wants to go right
+			ddx = ddx + BOSS_ACCEL; // enemy wants to go right
 		}
 	else 
 		{
@@ -56,7 +56,7 @@ Enemy.prototype.update = function(dt)
 	if(!this.moveRight)
 	{
 	if(celldown && !cell) {
-		ddx = ddx - ENEMY_ACCEL; // enemy wants to go left
+		ddx = ddx - BOSS_ACCEL; // enemy wants to go left
 	}
 	else 
 	{
@@ -71,7 +71,7 @@ Enemy.prototype.update = function(dt)
 	}
 }
 
-Enemy.prototype.draw = function()
+Boss.prototype.draw = function()
 {
 	this.sprite.draw(context, this.position.x, this.position.y);
 }

@@ -16,20 +16,20 @@ var Player = function() {
 	this.sprite.buildAnimation(16, 3, 76, 88, 0.05,
 			[43]);
 	this.sprite.buildAnimation(16, 3, 76, 88, 0.05,
-			[24,25,26,27,28,29,30,31]);
+			[16,17,18,19,20,21,22,23]);
 	this.sprite.buildAnimation(16, 3, 76, 88, 0.05,
 			[36]);
 	this.sprite.buildAnimation(16, 3, 76, 88, 0.05,
 			[42]);
 	this.sprite.buildAnimation(16, 3, 76, 88, 0.05,
-			[8,9,10,11,12,13,14,15]);
+			[0,1,2,3,4,5,6,7]);
 	
 	for(var i=0; i<ANIM_MAX; i++)
 	{
 		this.sprite.setAnimationOffset(i, -25, -40);
 	}
 	this.position = new Vector2();
-	this.position.set( 1*TILE, 2*TILE );
+	this.position.set( 1*TILE, 9*TILE );
 	 
 	this.direction = LEFT;
 	

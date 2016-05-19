@@ -1,6 +1,6 @@
 var canvas = document.getElementById("gameCanvas");
 var context = canvas.getContext("2d");
-
+var unkillable = 3;
 var startFrameMillis = Date.now();
 var endFrameMillis = Date.now();
 
@@ -90,7 +90,17 @@ var STATE_GAME = 1;
 var STATE_GAMEOVER = 2;
 var gameState = STATE_SPLASH
 
-
+function intersects(x1, y1, w1, h1, x2, y2, w2, h2)
+ {
+	 if(y2 + h2 < y1 ||
+		x2 + w2 < x1 ||
+		x2 > x1 + w1 ||
+		y2 > y1 +h1)
+	{
+		return false;
+	}
+	return true;
+ }
 
 var LAYER_COUNT = TileMaps["draft"].layers.length;
 var MAP = {tw: TileMaps["draft"].width, th: TileMaps["draft"].height};
@@ -190,7 +200,6 @@ function drawMap()
 		} 
 	}
 }
-var health = 4;
 var SCREEN_WIDTH = canvas.width;
 var SCREEN_HEIGHT = canvas.height;
 var player = new Player();
@@ -216,6 +225,9 @@ function runSplash(deltaTime)
 var viewoffset = new Vector2();
 function runGame(deltaTime)
 {
+	
+	unkillable = unkillable - deltaTime;
+	
 	context.drawImage(cavelevel,0,0 );
 	
 	context.save();
@@ -264,13 +276,29 @@ function runGame(deltaTime)
 		bullets [i].draw();
 	}
 	
-	context.restore();
-	
+
+	for(var i=0; i<enemies.length; i++)
+	{
+	if(intersects(
+		player.position.x - player.width/2, player.y - player.height/3,
+		88, 76,
+		enemies[i].position.x, enemies[i].position.y,
+		88,76) == true)
+	{
+		if (unkillable <= 0)
+		{
+		health = health -1
+		unkillable = 3
+		}
+	}
+		
+	}
 	if (player.isdead == true)
 	{
 		gameState = STATE_GAMEOVER
 	}
-	healthbar.UpdateHealth();
+	context.restore();
+	healthbar.UpdateHealth(health);
 	healthbar.draw(context);
 	context.fillStyle = "white";
 	context.font = "30px Minion Pro Italic";
