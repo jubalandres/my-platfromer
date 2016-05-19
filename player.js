@@ -10,10 +10,6 @@ var ANIM_MAX = 6;
 
 var Player = function() {
 	this.image = document.createElement("img");
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> origin/master
 	this.sprite = new Sprite("hero1.png");
 	this.sprite.buildAnimation(16, 3, 76, 88, 0.05,
 			[41]);
@@ -34,42 +30,11 @@ var Player = function() {
 	}
 	this.position = new Vector2();
 	this.position.set( 1*TILE, 2*TILE );
-<<<<<<< HEAD
 	 
 	this.direction = LEFT;
 	
 	this.width = 76;
 	this.height = 88;
-=======
-	
-	this.width = 76;
-	this.height = 88;
-=======
-	this.sprite = new Sprite("ChuckNorris.png");
-	this.sprite.buildAnimation(12, 8, 165, 126, 0.05,
-			[0, 1, 2, 3, 4, 5, 6, 7]);
-	this.sprite.buildAnimation(12, 8, 165, 126, 0.05,
-			[8, 9, 10, 11, 12]);
-	this.sprite.buildAnimation(12, 8, 165, 126, 0.05,
-			[13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]);
-	this.sprite.buildAnimation(12, 8, 165, 126, 0.05,
-			[52, 53, 54, 55, 56, 57, 58, 59]);
-	this.sprite.buildAnimation(12, 8, 165, 126, 0.05,
-			[60, 61, 62, 63, 64]);
-	this.sprite.buildAnimation(12, 8, 165, 126, 0.05,
-			[65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78]);
-	
-	for(var i=0; i<ANIM_MAX; i++)
-	{
-		this.sprite.setAnimationOffset(i, -55, -87);
-	}
-	this.position = new Vector2();
-	this.position.set( 1*TILE, 9*TILE );
-	
-	this.width = 165;
-	this.height = 125;
->>>>>>> origin/master
->>>>>>> origin/master
 	
 	this.offset = new Vector2();
 	this.offset.set(0,-35);
@@ -82,13 +47,6 @@ var Player = function() {
 	
 	this.cooldownTimer=0;
 	
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-	
->>>>>>> origin/master
->>>>>>> origin/master
 	SetupImageEvents(this, this.image);
 };
 Player.prototype.update = function(deltaTime)
@@ -113,7 +71,6 @@ Player.prototype.update = function(deltaTime)
 		if(this.sprite.currentAnimation != ANIM_WALK_RIGHT &&
 			this.jumping == false)
 			this.sprite.setAnimation(ANIM_WALK_RIGHT);
-<<<<<<< HEAD
 	}
 	else{
 		if(this.jumping == false && this.falling == false)
@@ -128,49 +85,6 @@ Player.prototype.update = function(deltaTime)
 				if(this.sprite.currentAnimation != ANIM_IDLE_RIGHT)
 					this.sprite.setAnimation(ANIM_IDLE_RIGHT);
 			}
-=======
-<<<<<<< HEAD
-	}
-	else{
-		if(this.jumping == false && this.falling == false)
-		{
-			if(this.direction == LEFT)
-			{
-				if(this.sprite.currentAnimation != ANIM_IDLE_LEFT)
-					this.sprite.setAnimation(ANIM_IDLE_LEFT);
-			}
-			else
-			{
-				if(this.sprite.currentAnimation != ANIM_IDLE_RIGHT)
-					this.sprite.setAnimation(ANIM_IDLE_RIGHT);
-			}
-=======
-	}
-	else{
-		if(this.jumping == false && this.falling == false)
-		{
-			if(this.direction == LEFT)
-			{
-				if(this.sprite.currentAnimation != ANIM_IDLE_LEFT)
-					this.sprite.setAnimation(ANIM_IDLE_LEFT);
-			}
-			else
-			{
-				if(this.sprite.currentAnimation != ANIM_IDLE_RIGHT)
-					this.sprite.setAnimation(ANIM_IDLE_RIGHT);
-			}
-		}
-	}
-	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true) {
-		jump = true;
-		if(left == true) {
-			this.sprite.setAnimation(ANIM_JUMP_LEFT);
-		}
-		else
-		if(right == true){
-			this.sprite.setAnimation(ANIM_JUMP_RIGHT);
->>>>>>> origin/master
->>>>>>> origin/master
 		}
 	}
 		if(keyboard.isKeyDown(keyboard.KEY_UP) == true) {
@@ -183,18 +97,11 @@ Player.prototype.update = function(deltaTime)
 		if(keyboard.isKeyDown(keyboard.KEY_SPACE)== true && this.cooldownTimer<=0){
 			sfxFire.play();
 			this.cooldownTimer=0.3;
-<<<<<<< HEAD
 			playerShoot();
-=======
->>>>>>> origin/master
 		}
 	
 	
 	
-<<<<<<< HEAD
-=======
-	
->>>>>>> origin/master
 	
 	var wasleft = this.velocity.x < 0;
 	var wasright = this.velocity.x > 0;
@@ -211,10 +118,6 @@ Player.prototype.update = function(deltaTime)
 		ddx = ddx - FRICTION; // player was going right, but not any more
 	if (jump && !this.jumping && !falling)
 	{
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> origin/master
 		   ddy = ddy - JUMP;
 		   this.jumping = true;
 		   if(this.direction == LEFT &&
@@ -227,22 +130,6 @@ Player.prototype.update = function(deltaTime)
 				{
 					this.sprite.setAnimation(ANIM_JUMP_RIGHT);	
 				}
-<<<<<<< HEAD
-=======
-=======
-		ddy = ddy - JUMP; // apply an instantaneous (large) vertical impulse
-		this.jumping = true;
-		if (jump && !this.jumping && !falling)
-		{
-		   ddy = ddy - JUMP;
-		   this.jumping = true;
-		   if(this.direction == LEFT)
-			    this.sprite.setAnimation(ANIM_JUMP_LEFT)
-		   else
-			    this.sprite.setAnimation(ANIM_JUMP_RIGHT)
-		}
->>>>>>> origin/master
->>>>>>> origin/master
 	}
 	this.position.y = Math.floor(this.position.y + (deltaTime * this.velocity.y));
 	this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
@@ -260,21 +147,12 @@ Player.prototype.update = function(deltaTime)
 	var ty = pixelToTile(position.y);
 	var nx = (position.x)%TILE;
 	var ny = (position.y)%TILE;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> origin/master
 	
 	if(cellAtTileCoord(LAYER_LAVA, tx,ty -1))
 	{
 		this.isdead = true
 	}
 	
-<<<<<<< HEAD
-=======
-=======
->>>>>>> origin/master
->>>>>>> origin/master
 	var cell = cellAtTileCoord(LAYER_PLATFORMS, tx, ty);
 	var cellright = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty);
 	var celldown = cellAtTileCoord(LAYER_PLATFORMS, tx, ty + 1);

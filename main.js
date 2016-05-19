@@ -27,23 +27,13 @@ function getDeltaTime()
 	return deltaTime;
 }
 
-<<<<<<< HEAD
 var musicBackground;
 var sfxFire;
-=======
-<<<<<<< HEAD
-var musicBackground;
-var sfxFire;
-=======
-//-------------------- Don't modify anything above here
->>>>>>> origin/master
->>>>>>> origin/master
  
 var cells = [];
 function initialize() {
 	for(var layerIdx = 0; layerIdx < LAYER_COUNT; layerIdx++) {
 		cells[layerIdx] = [];
-<<<<<<< HEAD
 	var idx = 0;
 		for(var y = 0; y < TileMaps["draft"].layers[layerIdx].height; y++) {
 			cells[layerIdx][y] = [];
@@ -70,26 +60,10 @@ function initialize() {
 					var py = tileToPixel(y);
 					var e = new Enemy(px, py);
 				enemies.push(e);
-=======
-		var idx = 0;
-		for(var y = 0; y < TileMaps["draft"].layers[layerIdx].height; y++) {
-			cells[layerIdx][y] = [];
-			for(var x = 0; x < TileMaps["draft"].layers[layerIdx].width; x++) {
-				if(TileMaps["draft"].layers[layerIdx].data[idx] != 0) {
-					cells[layerIdx][y][x] = 1;
-				}
-				else if(cells[layerIdx][y][x] != 1) {
-					cells[layerIdx][y][x] = 0;
->>>>>>> origin/master
 				}
 			idx++;
 			}
 		}
-<<<<<<< HEAD
-=======
-	}
-	
->>>>>>> origin/master
 	musicBackground = new Howl(
 	{
 		urls: ["cavelevelmusic.wav"],
@@ -115,19 +89,8 @@ var STATE_SPLASH = 0;
 var STATE_GAME = 1;
 var STATE_GAMEOVER = 2;
 var gameState = STATE_SPLASH
-<<<<<<< HEAD
 
 
-=======
-<<<<<<< HEAD
-
-=======
-var fps = 0;
-var fpsCount = 0;
-var fpsTime = 0;
->>>>>>> origin/master
-
->>>>>>> origin/master
 
 var LAYER_COUNT = TileMaps["draft"].layers.length;
 var MAP = {tw: TileMaps["draft"].width, th: TileMaps["draft"].height};
@@ -141,7 +104,6 @@ var TILESET_COUNT_Y = TileMaps["draft"].tilesets[0].tilecount
 						
 var tileset = document.createElement("img");
 tileset.src = TileMaps["draft"].tilesets[0].image;
-<<<<<<< HEAD
 var score = 0;
 var METER = TILE;
 var GRAVITY = METER * 10 * 6;
@@ -169,56 +131,6 @@ var bullet = new Bullet(player.position.x +10 ,player.position.y -15,player.dire
 bullets.push(bullet);
 }
 
-=======
-<<<<<<< HEAD
-var score = 0;
-var METER = TILE;
-var GRAVITY = METER * 10 * 6;
-var MAXDX = METER * 10;
-var MAXDY = METER * 15;
-var ACCEL = MAXDX * 2;
-var FRICTION = MAXDX * 5;
-var JUMP = METER * 1500000000000;
-
-var ENEMY_MAXDX = METER * 5;
-var ENEMY_ACCEL = ENEMY_MAXDX * 2;
-
-var enemies = [];
-var LAYER_BACKGROUND = 3;
-var LAYER_PLATFORMS = 2;
-var LAYER_LADDERS = 1;
-var LAYER_LAVA = 0;
-var LAYER_OBJECT_ENEMIES = 3;
-var LAYER_OBJECT_TRIGGERS = 4;
-
-idx = 0;
-for(var y = 0; y < level1.layers[LAYER_OBJECT_ENEMIES].height; y++) {
-	for(var x = 0; x < level1.layers[LAYER_OBJECT_ENEMIES].width; x++) {
-		if(level1.layers[LAYER_OBJECT_ENEMIES].data[idx] != 0) {
-		var px = tileToPixel(x);
-		var py = tileToPixel(y);
-		var e = new Enemy(px, py);
-	enemies.push(e);
-		}
-idx++;
-	}
-} 
-
-
-=======
-
-var METER = TILE;
-var GRAVITY = METER * 9 * 6;
-var MAXDX = METER * 10;
-var MAXDY = METER * 15;
-var ACCEL = MAXDX * 2;
-var FRICTION = MAXDX * 6;
-var JUMP = METER * 15000;
-var LAYER_BACKGROUND = 0;
-var LAYER_PLATFORMS = 2;
-var LAYER_LADDERS = 1;
->>>>>>> origin/master
->>>>>>> origin/master
 function cellAtPixelCoord(layer, x,y)
 {
 	if(x<0 || x>SCREEN_WIDTH)
@@ -284,7 +196,6 @@ var SCREEN_HEIGHT = canvas.height;
 var player = new Player();
 var healthbar = new Healthbar();
 var keyboard = new Keyboard();
-<<<<<<< HEAD
 
 var cavelevel = document.createElement("img");
 cavelevel.src = "cavelevels.png";
@@ -294,34 +205,6 @@ var endscreen = document.createElement("img");
 endscreen.src = "endscreen.png";
 function runSplash(deltaTime)
 {
-=======
-var bullets = [];
-function playerShoot()
-{
-	var bullet = new Bullet()
-	bullets.push(bullet);
-}
-var shootgunbullets = [];
-function playerShootshootgun()
-{
-	var shootgunbullet = new Shootgunbullets()
-	shootgunbullets.push(shootgunbullet);
-}
-var cavelevel = document.createElement("img");
-cavelevel.src = "cavelevels.png";
-var background = document.createElement("img");
-background.src = "splash.png";
-<<<<<<< HEAD
-var endscreen = document.createElement("img");
-endscreen.src = "endscreen.png";
-=======
-var cavelevelmusic = new Audio("cavelevelmusic.wav");
-cavelevelmusic.loop = true ;
-cavelevelmusic.play ();
->>>>>>> origin/master
-function runSplash(deltaTime)
-{
->>>>>>> origin/master
 	if(keyboard.isKeyDown(keyboard.KEY_SPACE))
 	{
 		gameState = STATE_GAME;
@@ -333,15 +216,6 @@ function runSplash(deltaTime)
 var viewoffset = new Vector2();
 function runGame(deltaTime)
 {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-	if (keyboard.isKeyDown(keyboard.KEY_SPACE))
-	{
-		playerShoot();
-	}
-	
->>>>>>> origin/master
 	context.drawImage(cavelevel,0,0 );
 	
 	context.save();
@@ -350,22 +224,10 @@ function runGame(deltaTime)
 	context.translate(-viewoffset.x, 0);
 	
 	drawMap();
-<<<<<<< HEAD
-=======
-=======
-	if (keyboard.isKeyDown(keyboard.KEY_Z))
-	{
-		playerShoot();
-	}
-	context.drawImage(cavelevel,0,0 );
-	context.save();
->>>>>>> origin/master
->>>>>>> origin/master
 	if(player.position.x >= viewoffset.x + canvas.width/2)
 	{
 		viewoffset.x = player.position.x - canvas.width/2;
 	}
-<<<<<<< HEAD
 	player.update(deltaTime);
 	player.draw();
 	for(var i=0; i<enemies.length; i++)
@@ -402,26 +264,6 @@ function runGame(deltaTime)
 		bullets [i].draw();
 	}
 	
-=======
-<<<<<<< HEAD
-	player.update(deltaTime);
-	player.draw();
-=======
-	context.scale(0.5,0.5);
-	context.translate(-viewoffset.x, 0);
-	
-	drawMap();
-	player.update(deltaTime);
-	player.draw();
-	
->>>>>>> origin/master
-	for(var i=0; i<bullets.length; i++)
-	{
-		bullets[i].update(deltaTime);
-		bullets[i].draw();
-	}
-<<<<<<< HEAD
->>>>>>> origin/master
 	context.restore();
 	
 	if (player.isdead == true)
@@ -434,50 +276,11 @@ function runGame(deltaTime)
 	context.font = "30px Minion Pro Italic";
 	var scoreText = "Score: " + score;
 	context.fillText(scoreText, SCREEN_WIDTH - 700, 25);
-<<<<<<< HEAD
-=======
-=======
-
-	for(var j=0; j<bullets.length; j++)
-	{
-		if(intersects(
-		bullets[j].x, bullets[j].y,
-		bullets[j].width, bullets[j].height,
-		enemy.x, enemy.y,
-		enemy.width, enemy.height) == true)
-		{enemy.isdead = true}
-	}
-	
-	enemy.draw();
-	context.restore();
-// update the frame counter
-	fpsTime += deltaTime;
-	fpsCount++;
-	if(fpsTime >= 1)
-	{
-		fpsTime -= 1;
-		fps = fpsCount;
-		fpsCount = 0;
-	}
-// draw the FPS
-	context.fillStyle = "#f00";
-	context.font="14px Arial";
-	context.fillText("FPS: " + fps, 5, 20, 100);
->>>>>>> origin/master
->>>>>>> origin/master
 }
 
 function runGameOver(deltaTime)
 {
-<<<<<<< HEAD
 		context.drawImage(endscreen,0,0 );
-=======
-<<<<<<< HEAD
-		context.drawImage(endscreen,0,0 );
-=======
-	
->>>>>>> origin/master
->>>>>>> origin/master
 }
 
 
