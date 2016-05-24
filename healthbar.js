@@ -1,4 +1,4 @@
-var health = 4;
+var health = 3;
 var Healthbar = function () 
 {
 	this.position = new Vector2();
@@ -19,19 +19,19 @@ var Healthbar = function ()
 	{
 		if(health < 0)
 		{
-			this.currentImage = this.images[1];
+			player.isdead = true;
 		}
 		else if(health < 1)
 		{
-			this.currentImage = this.images[2];
+			this.currentImage = this.images[3];
 		}
 		else if(health < 2)
 		{
-			this.currentImage = this.images[3];
+			this.currentImage = this.images[2];
 		}
 		else if(health < 3)
 		{
-			player.isdead = true;
+			this.currentImage = this.images[1];
 		}
 	};
 	this.draw = function(c)

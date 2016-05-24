@@ -1,6 +1,6 @@
 var canvas = document.getElementById("gameCanvas");
 var context = canvas.getContext("2d");
-var unkillable = 3;
+var unkillable = 0;
 var startFrameMillis = Date.now();
 var endFrameMillis = Date.now();
 
@@ -129,10 +129,10 @@ var ENEMY_ACCEL = ENEMY_MAXDX * 2;
 var enemies = [];
 var LAYER_BACKGROUND = 3;
 var LAYER_PLATFORMS = 2;
-var LAYER_LADDERS = 1;
-var LAYER_LAVA = 0;
-var LAYER_OBJECT_ENEMIES = 7;
-var LAYER_OBJECT_TRIGGERS = 6;
+var LAYER_LADDERS = 0;
+var LAYER_LAVA = 1;
+var LAYER_OBJECT_ENEMIES = 6;
+var LAYER_OBJECT_TRIGGERS = 7;
 var bullets = [];
  function playerShoot()
 {
@@ -209,7 +209,7 @@ var keyboard = new Keyboard();
 var cavelevel = document.createElement("img");
 cavelevel.src = "cavelevels.png";
 var background = document.createElement("img");
-background.src = "splash.png";
+background.src = "splashback.png";
 var endscreen = document.createElement("img");
 endscreen.src = "endscreen.png";
 function runSplash(deltaTime)
@@ -280,25 +280,23 @@ function runGame(deltaTime)
 	for(var i=0; i<enemies.length; i++)
 	{
 	if(intersects(
-		player.position.x - player.width/2, player.y - player.height/3,
-		88, 76,
-		enemies[i].position.x, enemies[i].position.y,
-		88,76) == true)
+		player.position.x -10, player.position.y -37,44, 76,
+		enemies[i].position.x -10, enemies[i].position.y -37,44, 76) == true)
 	{
 		if (unkillable <= 0)
 		{
 		health = health -1
+			healthbar.UpdateHealth(health);
 		unkillable = 3
 		}
 	}
-		
 	}
 	if (player.isdead == true)
 	{
 		gameState = STATE_GAMEOVER
 	}
 	context.restore();
-	healthbar.UpdateHealth(health);
+
 	healthbar.draw(context);
 	context.fillStyle = "white";
 	context.font = "30px Minion Pro Italic";
